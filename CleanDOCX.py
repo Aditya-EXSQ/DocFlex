@@ -2,8 +2,11 @@ import subprocess
 import os
 import sys
 import shutil
+from dotenv import load_dotenv
 
-SOFFICE_PATH = r"C:\Program Files\LibreOffice\program\soffice.exe"  # adjust if needed
+load_dotenv()
+
+SOFFICE_PATH = os.getenv("SOFFICE_PATH")
 
 def _unique_cleaned_path(input_path, output_dir=None):
     base = os.path.splitext(os.path.basename(input_path))[0]
