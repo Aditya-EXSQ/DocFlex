@@ -25,16 +25,32 @@ def convert_docx_roundtrip(docx_path, output_dir="Output"):
     print(f"Roundtrip complete! Output: {reconstructed_docx}")
     return reconstructed_docx
 
-def open_json_editor(json_path):
+def convert_docx_with_editor(docx_path, output_dir="Output"):
     """Launch Tkinter editor for JSON dataBinding fields"""
-    editor = JsonEditorUI(json_path)
-    editor.run()
+     # 1) DOCX -> editable JSON
+    d2j = DocxToJson(docx_path, output_dir)
+    d2j.extract_docx()
+    json_path = d2j.convert_to_json()
+
+    # 2) Launch Tkinter editor and wait for user to edit (blocking)
+    editor = JsonEditorUI(json_path=json_path, auto_save_on_close=True)
+    editor.run()   # blocks until user closes the UI; edits are saved into JSON at json_path
+
+    # 3) JSON -> DOCX (JsonToDocx will pick up _edits from the JSON automatically)
+    j2d = JsonToDocx(json_path, output_dir)
+    j2d.json_to_xml()
+    reconstructed_docx = j2d.xml_to_docx()
+
+    d2j.cleanup()
+    j2d.cleanup()
+
+    print(f"Roundtrip complete! Output: {reconstructed_docx}")
+    return reconstructed_docx
 
 # Example usage
 
 # Roundtrip (DOCX -> JSON -> DOCX)
-convert_docx_roundtrip("Data/DOCX Files/Master Approval Letter.docx", "Output/DOCX Files/Master Approval Letter")
+# convert_docx_roundtrip("Data/DOCX Files/Master Approval Letter.docx", "Output/DOCX Files/Master Approval Letter")
 
 # TKINTER UI
-# json_path = "Output/DOCX Files/Master Approval Letter/Document.json"
-# open_json_editor(json_path)
+convert_docx_with_editor("Data/DOCX Files/Master Approval Letter.docx", "Output/DOCX Files/Master Approval Letter")
