@@ -54,8 +54,3 @@ def convert_docx_with_editor(docx_path, output_dir="Output"):
 
 # TKINTER UI
 convert_docx_with_editor("Data/DOCX Files/Master Approval Letter.docx", "Output/DOCX Files/Master Approval Letter")
-
-# jsonpath = "Document.json"
-# j2d = JsonToDocx(jsonpath, "Output")
-# j2d.json_to_xml()
-# reconstructed_docx = j2d.xml_to_docx()
